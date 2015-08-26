@@ -1,0 +1,37 @@
+:version: 0.1.0
+
+= JavaScript Core Asset Pipeline
+
+This provides a base class `JavaScriptProcessor` that provides the JsExec method that allows arbitrary JavaScript to run
+with caching and thread management done automatically. Currently uses Rhino but Nashorn version coming soon.
+
+== Getting started
+
+[source,groovy,subs='attributes']
+----
+dependencies {
+    compile 'com.craigburke.assets:javascript-core:{version}'
+}
+----
+
+== Example
+
+[source,groovy,subs='attributes']
+----
+class ExampleProcessor extends JavaScriptProcessor {
+
+    ExampleProcessor(AssetCompiler precompiler) {
+        super(precompiler)
+    }
+
+    String process(String input, AssetFile file) {
+        jsExec('transform.js') { // <1>
+            put('input', input) // <2>
+            eval('transformFunction(input)') // <3>
+        }
+    }
+}
+----
+<1> You can optionally load a file that's contained on your classpath. Here the file `transform.js` is loaded
+<2> The *put* method allows you to add a variable like *input* into the javascript context
+<3> The *eval* method allows you to execute a JavaScript function (or arbitrary JavaScript). The result is returned as a String
