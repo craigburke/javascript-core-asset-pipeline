@@ -3,7 +3,9 @@
 = JavaScript Core Asset Pipeline
 
 This provides a base class `JavaScriptProcessor` that provides the jsExec method that allows arbitrary JavaScript to run
-with caching and thread management done automatically. Currently uses Rhino but Nashorn version coming soon.
+with caching and thread management done automatically.
+
+NOTE: The JavaScript is currently run using Rhino but the option to run using Nashorn will be added in a future release.
 
 == Getting started
 
