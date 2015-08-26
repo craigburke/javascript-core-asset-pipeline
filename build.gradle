@@ -1,0 +1,92 @@
+plugins {
+    id 'groovy'
+    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.3.1'
+    id 'nebula.provided-base' version '2.2.2'
+}
+
+group = 'com.craigburke.asset'
+version = '0.1.0'
+
+ext {
+    gitHubRepo = 'https://github.com/craigburke/javascript-core-asset-pipeline'
+    artifactId = 'javascript-core'
+}
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    provided 'com.bertramlabs.plugins:asset-pipeline-core:2.0.12'
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+}
+
+task('wrapper', type: Wrapper) {
+    gradleVersion = '2.6'
+}
+
+task('sourcesJar', type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task('javadocJar', type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+bintray {
+    user = project.hasProperty('bintrayUsername') ? bintrayUsername : ''
+    key = project.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
+    publications = ['maven']
+
+    pkg {
+        repo = 'asset-pipeline'
+        userOrg = 'craigburke'
+        name = artifactId
+        licenses = ['Apache-2.0']
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId project.artifactId
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name artifactId
+                    description 'Core project for JavaScript Asset Pipeline processors'
+                    url gitHubRepo
+                    scm {
+                        url gitHubRepo
+                        connection "scm:${gitHubRepo}.git"
+                        developerConnection "scm:${gitHubRepo}.git"
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'craigburke'
+                            name 'Craig Burke'
+                            email 'craig@craigburke.com'
+                        }
+                    }
+                }
+            }
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
