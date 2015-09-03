@@ -23,6 +23,8 @@ dependencies {
 import com.craigburke.asset.JavaScriptProcessor
 import com.craigburke.asset.JavaScriptEngine
 
+import groovy.transform.Synchronized
+
 class ExampleProcessor extends JavaScriptProcessor {
 
     ExampleProcessor(AssetCompiler precompiler) {
@@ -30,11 +32,12 @@ class ExampleProcessor extends JavaScriptProcessor {
     }
 
     static JavaScriptEngine exampleEngine
+    @Syncronized
     JavaScriptEngine getEngine() { // <1>
-        if (!concatEngine) {
-            concatEngine = new JavaScriptEngine('transform.js') // <2>
+        if (!exampleEngine) {
+            exampleEngine = new JavaScriptEngine('transform.js') // <2>
         }
-        concatEngine
+        exampleEngine
     }
 
     String process(String input, AssetFile file) {
