@@ -32,6 +32,7 @@ class ExampleProcessor extends JavaScriptProcessor {
     }
 
     static JavaScriptEngine exampleEngine
+    
     @Syncronized
     JavaScriptEngine getEngine() { // <1>
         if (!exampleEngine) {
