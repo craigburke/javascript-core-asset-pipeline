@@ -4,7 +4,7 @@ import groovy.transform.CompileStatic
 import org.mozilla.javascript.ScriptableObject
 
 @CompileStatic
-class JavaScriptCacheItem {
+class CacheItem {
     ScriptableObject script = null
     boolean available = true
 }

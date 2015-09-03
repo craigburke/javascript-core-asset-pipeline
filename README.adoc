@@ -1,11 +1,11 @@
-:version: 0.1.0
+:version: 0.2.0
 
 = JavaScript Core Asset Pipeline
 
 This provides a base class `JavaScriptProcessor` that provides the jsExec method that allows arbitrary JavaScript to run
 with caching and thread management done automatically.
 
-NOTE: The JavaScript is currently run using Rhino but the option to run using Nashorn will be added in a future release.
+NOTE: The JavaScript is currently run using the Rhino engine. Nashorn support might be added at a later date.
 
 == Getting started
 
@@ -20,20 +20,32 @@ dependencies {
 
 [source,groovy,subs='attributes']
 ----
+import com.craigburke.asset.JavaScriptProcessor
+import com.craigburke.asset.JavaScriptEngine
+
 class ExampleProcessor extends JavaScriptProcessor {
 
     ExampleProcessor(AssetCompiler precompiler) {
         super(precompiler)
     }
 
+    static JavaScriptEngine exampleEngine
+    JavaScriptEngine getEngine() { // <1>
+        if (!concatEngine) {
+            concatEngine = new JavaScriptEngine('transform.js') // <2>
+        }
+        concatEngine
+    }
+
     String process(String input, AssetFile file) {
-        jsExec('transform.js') { // <1>
-            put('input', input) // <2>
-            eval('transformFunction(input)') // <3>
+        javaScript {
+            var1 = input // <3>
+            eval 'transformFunction(var1);' // <4>
         }
     }
 }
 ----
-<1> You can optionally load a file that's contained on your classpath. Here the file `transform.js` is loaded
-<2> The *put* method allows you to add a variable like *input* into the javascript context
-<3> The *eval* method allows you to execute a JavaScript function (or arbitrary JavaScript). The result is returned as a String
+<1> The getEngine method must be implemented, here we're just returning a static JavaScript engine
+<2> The JavaScriptEngine constructor can optionally load a file that's contained on your classpath. Here the file `transform.js` is loaded
+<3> This adds the variable *var1* to your JavaScript context with the value of input.
+<4> The *eval* method allows you to execute a JavaScript function (or arbitrary JavaScript). The result is returned as a String

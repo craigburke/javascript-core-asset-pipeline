@@ -1,21 +1,21 @@
 package com.craigburke.asset
 
-import asset.pipeline.AssetCompiler
-import asset.pipeline.AssetFile
 import asset.pipeline.JsAssetFile
+import com.craigburke.asset.processors.ThreadProcessor
 import spock.lang.Specification
+import java.util.concurrent.ConcurrentHashMap
 
 class ProcessorThreadSpec extends Specification {
 
     def "Simulate parallel processors with several threads"() {
         given:
-        def results = []
+        ConcurrentHashMap results = [:]
 
         when:
         (1..threadPool).collect { index ->
             Thread.start {
                 println "Starting thread: ${index}"
-                results << new SimpleProcessor().process(input, new JsAssetFile())
+                results[index] = new ThreadProcessor().process("${input}${index}", new JsAssetFile())
             }
         }*.join()
 
@@ -23,7 +23,7 @@ class ProcessorThreadSpec extends Specification {
         results.size() == threadPool
 
         and:
-        results.every { it == input }
+        results.every { key, value -> value == "${input}${key}" }
 
         where:
         input = 'foo'
@@ -32,17 +32,3 @@ class ProcessorThreadSpec extends Specification {
 
 }
 
-class SimpleProcessor extends JavaScriptProcessor {
-
-    SimpleProcessor(AssetCompiler precompiler) {
-        super(precompiler)
-    }
-
-    String process(String input, AssetFile file) {
-        jsExec {
-            put('input', input)
-            eval('input')
-        }
-    }
-
-}

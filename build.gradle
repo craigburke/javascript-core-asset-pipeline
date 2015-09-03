@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.craigburke.asset'
-version = '0.1.0'
+version = '0.2.0'
 
 ext {
     gitHubRepo = 'https://github.com/craigburke/javascript-core-asset-pipeline'
@@ -23,6 +23,7 @@ repositories {
 dependencies {
     provided 'com.bertramlabs.plugins:asset-pipeline-core:2.0.12'
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
+    compile 'org.mozilla:rhino:1.7R5'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
 
