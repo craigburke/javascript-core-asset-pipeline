@@ -34,9 +34,7 @@ class ExampleProcessor extends JavaScriptProcessor {
     
     @Syncronized
     JavaScriptEngine getEngine() { // <1>
-        if (!exampleEngine) {
-            exampleEngine = new JavaScriptEngine('transform.js') // <2>
-        }
+        exampleEngine = exampleEngine ?: new JavaScriptEngine('transform.js') // <2>
         exampleEngine
     }
 
