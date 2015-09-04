@@ -2,8 +2,7 @@
 
 = JavaScript Core Asset Pipeline
 
-This provides a base class `JavaScriptProcessor` that provides the jsExec method that allows arbitrary JavaScript to run
-with caching and thread management done automatically.
+This provides the `JavaScriptProcessor` base class for building Asset Pipeline processors that run JavaScript with caching, thread safety, and a nice DSL.
 
 NOTE: The JavaScript is currently run using the Rhino engine. Nashorn support might be added at a later date.
 
@@ -32,11 +31,10 @@ class ExampleProcessor extends JavaScriptProcessor {
     }
 
     static JavaScriptEngine exampleEngine
+    
     @Syncronized
     JavaScriptEngine getEngine() { // <1>
-        if (!exampleEngine) {
-            exampleEngine = new JavaScriptEngine('transform.js') // <2>
-        }
+        exampleEngine = exampleEngine ?: new JavaScriptEngine('transform.js') // <2>
         exampleEngine
     }
 
@@ -48,7 +46,7 @@ class ExampleProcessor extends JavaScriptProcessor {
     }
 }
 ----
-<1> The getEngine method must be implemented, here we're just returning a static JavaScript engine
+<1> The getEngine method must be implemented, here we're just returning a static JavaScriptEngine
 <2> The JavaScriptEngine constructor can optionally load a file that's contained on your classpath. Here the file `transform.js` is loaded
 <3> This adds the variable *var1* to your JavaScript context with the value of input.
 <4> The *eval* method allows you to execute a JavaScript function (or arbitrary JavaScript). The result is returned as a String
