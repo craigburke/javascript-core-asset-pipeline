@@ -46,7 +46,7 @@ class ExampleProcessor extends JavaScriptProcessor {
     }
 }
 ----
-<1> The getEngine method must be implemented, here we're just returning a static JavaScript engine
+<1> The getEngine method must be implemented, here we're just returning a static JavaScriptEngine
 <2> The JavaScriptEngine constructor can optionally load a file that's contained on your classpath. Here the file `transform.js` is loaded
 <3> This adds the variable *var1* to your JavaScript context with the value of input.
 <4> The *eval* method allows you to execute a JavaScript function (or arbitrary JavaScript). The result is returned as a String
