@@ -3,6 +3,7 @@ package com.craigburke.asset
 import groovy.transform.CompileStatic
 
 import org.mozilla.javascript.Context
+import org.mozilla.javascript.Script
 import org.mozilla.javascript.Scriptable
 import org.mozilla.javascript.ScriptableObject
 
@@ -10,9 +11,13 @@ import org.mozilla.javascript.ScriptableObject
 class JavaScriptRunner {
 
     private Scriptable scope
+    private Context context
 
-    JavaScriptRunner(ScriptableObject globalScope) {
-        Context context = Context.enter()
+    JavaScriptRunner(Script baseScript, ScriptableObject globalScope) {
+        context = Context.enter()
+        if (baseScript) {
+            baseScript.exec(context, globalScope)
+        }
         scope = context.newObject(globalScope)
         scope.prototype = globalScope
         scope.parentScope = null
@@ -36,10 +41,6 @@ class JavaScriptRunner {
 
     def eval(String input) {
         context.evaluateString(scope, input, 'javascript eval command', 0, null)
-    }
-
-    static Context getContext() {
-        Context.enter()
     }
 
 }

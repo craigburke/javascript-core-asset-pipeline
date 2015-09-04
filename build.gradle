@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.craigburke.asset'
-version = '0.2.0'
+version = '0.2.1'
 
 ext {
     gitHubRepo = 'https://github.com/craigburke/javascript-core-asset-pipeline'

@@ -15,5 +15,4 @@ abstract class JavaScriptProcessor extends AbstractProcessor {
     abstract JavaScriptEngine getEngine()
     abstract String process(String input, AssetFile assetFile)
     String javaScript(Closure closure) { engine.run closure }
-
 }
