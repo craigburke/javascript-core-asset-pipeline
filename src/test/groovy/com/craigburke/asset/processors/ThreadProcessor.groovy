@@ -1,31 +1,31 @@
 package com.craigburke.asset.processors
 
+import asset.pipeline.AbstractProcessor
 import asset.pipeline.AssetCompiler
 import asset.pipeline.AssetFile
 import com.craigburke.asset.JavaScriptEngine
-import com.craigburke.asset.JavaScriptProcessor
 import groovy.transform.Synchronized
 
-class ThreadProcessor extends JavaScriptProcessor {
+class ThreadProcessor extends AbstractProcessor {
 
-    static JavaScriptEngine simpleEngine
+    static JavaScriptEngine jsEngine
 
     ThreadProcessor(AssetCompiler precompiler) {
         super(precompiler)
+        setupEngine()
     }
 
     @Synchronized
-    JavaScriptEngine getEngine() {
-        if (!simpleEngine) {
-            simpleEngine = new JavaScriptEngine()
+    static void setupEngine() {
+        if (!jsEngine) {
+            jsEngine = new JavaScriptEngine()
         }
-        simpleEngine
     }
 
     String process(String input, AssetFile file) {
-        javaScript {
+        jsEngine.run {
             var1 = input
-            eval('var1')
+            var1
         }
     }
 

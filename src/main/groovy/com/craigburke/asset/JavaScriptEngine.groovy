@@ -11,7 +11,7 @@ class JavaScriptEngine {
     private ScriptableObject globalScope
     private Script baseScript
 
-    JavaScriptEngine(String baseScriptName = null, boolean interpreted = false) {
+    JavaScriptEngine(String baseJs = "", boolean interpreted = false) {
         Context context = Context.enter()
         try {
             if (interpreted) {
@@ -19,9 +19,8 @@ class JavaScriptEngine {
             }
             globalScope = context.initStandardObjects(null, true)
 
-            if (baseScriptName) {
-                URL baseScriptResource = JavaScriptProcessor.classLoader.getResource(baseScriptName)
-                baseScript = context.compileString(baseScriptResource.text, baseScriptResource.file, 0, null)
+            if (baseJs) {
+                baseScript = context.compileString(baseJs, 'Base script', 0, null)
             }
         }
         finally {

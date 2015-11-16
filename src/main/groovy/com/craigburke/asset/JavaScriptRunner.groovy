@@ -3,6 +3,7 @@ package com.craigburke.asset
 import groovy.transform.CompileStatic
 
 import org.mozilla.javascript.Context
+import org.mozilla.javascript.Function
 import org.mozilla.javascript.Script
 import org.mozilla.javascript.Scriptable
 import org.mozilla.javascript.ScriptableObject
@@ -19,28 +20,22 @@ class JavaScriptRunner {
             baseScript.exec(context, globalScope)
         }
         scope = context.newObject(globalScope)
-        scope.prototype = globalScope
-        scope.parentScope = null
+        scope.setPrototype(globalScope)
+        scope.setParentScope(null)
     }
 
-    void put(String name, value) {
-        scope.put(name, scope, value)
-    }
-
-    def get(String name) {
-        scope.get(name, scope)
+    def methodMissing(String name, args) {
+        Scriptable prototype = scope.getPrototype()
+        Function jsFunction = (Function)prototype.get(name, prototype);
+        jsFunction.call(context, scope, scope, args as Object[])
     }
 
     def getProperty(String name) {
-        get(name)
+        scope.get(name, scope)
     }
 
     void setProperty(String name, value) {
-        put(name, value)
-    }
-
-    def eval(String input) {
-        context.evaluateString(scope, input, 'javascript eval command', 0, null)
+        scope.put(name, scope, value)
     }
 
 }
